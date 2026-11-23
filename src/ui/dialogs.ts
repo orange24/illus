@@ -16,12 +16,17 @@ export function toast(message: string, kind: 'info' | 'error' = 'info') {
   setTimeout(() => el.remove(), kind === 'error' ? 6500 : 3500);
 }
 
-function modal(title: string, body: HTMLElement, actions: { label: string; primary?: boolean; run?: () => boolean | void | Promise<boolean | void> }[]) {
+export function modal(
+  title: string,
+  body: HTMLElement,
+  actions: { label: string; primary?: boolean; run?: () => boolean | void | Promise<boolean | void> }[],
+  opts: { className?: string; onClose?: () => void } = {},
+) {
   const root = document.getElementById('modal-root')!;
   const backdrop = document.createElement('div');
   backdrop.className = 'modal-backdrop';
   const box = document.createElement('div');
-  box.className = 'modal';
+  box.className = `modal ${opts.className ?? ''}`;
   box.innerHTML = `<div class="modal-title">${title}</div>`;
   box.appendChild(body);
   const bar = document.createElement('div');
@@ -29,6 +34,7 @@ function modal(title: string, body: HTMLElement, actions: { label: string; prima
   const close = () => {
     backdrop.remove();
     document.removeEventListener('keydown', onKey, true);
+    opts.onClose?.();
   };
   for (const a of actions) {
     const b = document.createElement('button');
@@ -192,6 +198,7 @@ const SHORTCUTS: [string, [string, string][]][] = [
       ['Mod+8', 'Compound Path'],
       ['Mod+7', 'Clipping Mask'],
       ['Mod+2 / Mod+3', 'ล็อก / ซ่อน'],
+      ['Mod+Alt+T', 'Image Trace (แปลงภาพเป็นเวกเตอร์)'],
     ],
   ],
   [

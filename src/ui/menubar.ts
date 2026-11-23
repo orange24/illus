@@ -23,6 +23,8 @@ const MENUS: [string, (string | '-')[]][] = [
       'object.clip',
       'object.releaseClip',
       '-',
+      'object.imageTrace',
+      '-',
       'object.flipH',
       'object.flipV',
       '-',

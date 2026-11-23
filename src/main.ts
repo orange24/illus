@@ -14,6 +14,8 @@ import { buildMenubar } from './ui/menubar';
 import { buildToolbar } from './ui/toolbar';
 import { buildPanels } from './ui/panels';
 import { displayKeys } from './commands';
+import { PRESETS, selectedRasters } from './trace/imageTrace';
+import { showTraceDialog, quickTrace } from './ui/traceDialog';
 
 const HINTS: Record<string, string> = {
   select: 'คลิกเพื่อเลือก · Shift เพิ่ม · Alt+ลาก ทำสำเนา · ลากมุมเพื่อย่อขยาย · ลากนอกมุมเพื่อหมุน',
@@ -153,7 +155,19 @@ function buildOptionsBar(ed: Editor) {
     if (t.id === 'star') extra = `<label>จำนวนแฉก <input type="number" min="3" max="64" value="${t.points}" data-k="points"/></label>`;
     if (t.id === 'roundrect') extra = `<label>ความมน <input type="number" min="0" value="${t.radius}" data-k="radius"/></label>`;
     const n = ed.selection.length;
+    const hasImage = n > 0 && selectedRasters(ed).length > 0;
+    if (hasImage) {
+      extra += `<span class="opt-trace"><button class="opt-btn primary" data-act="trace">Image Trace</button><select data-act="quick" title="Trace ทันทีด้วยค่าสำเร็จรูป"><option value="">ค่าสำเร็จรูป…</option>${PRESETS.map((p) => `<option value="${p.id}">${p.label}</option>`).join('')}</select></span>`;
+    }
     bar.innerHTML = `<span class="opt-tool">${ed.tool.label}</span>${extra}<span class="opt-sel">${n ? `เลือก ${n} วัตถุ` : 'ไม่ได้เลือกวัตถุ'}</span>`;
+    bar.querySelector<HTMLButtonElement>('[data-act=trace]')?.addEventListener('click', () => showTraceDialog(ed));
+    const quick = bar.querySelector<HTMLSelectElement>('[data-act=quick]');
+    if (quick) {
+      quick.onkeydown = (e) => e.stopPropagation();
+      quick.onchange = () => {
+        if (quick.value) void quickTrace(ed, quick.value);
+      };
+    }
     bar.querySelectorAll<HTMLInputElement>('input[data-k]').forEach((inp) => {
       inp.onkeydown = (e) => e.stopPropagation();
       inp.onchange = () => {
