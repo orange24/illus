@@ -3,6 +3,8 @@ import type { Ops } from './ops';
 import { exportAI, exportPDF, exportSVG, exportPNG, download, buildAI, baseName } from './io/export';
 import { loadFile, pickFile, OPEN_ACCEPT, IMPORT_ACCEPT } from './io/files';
 import { showExportDialog, showShortcuts, showNewDocDialog, toast } from './ui/dialogs';
+import { showTraceDialog } from './ui/traceDialog';
+import { selectedRasters } from './trace/imageTrace';
 
 export interface Command {
   id: string;
@@ -96,6 +98,13 @@ export function buildCommands(ed: Editor, ops: Ops): Map<string, Command> {
     { id: 'object.releaseCompound', label: 'แยก Compound Path', keys: 'Mod+Alt+Shift+8', run: () => ops.releaseCompound(), enabled: hasSel },
     { id: 'object.clip', label: 'สร้าง Clipping Mask', keys: 'Mod+7', run: () => ops.makeClippingMask(), enabled: multi },
     { id: 'object.releaseClip', label: 'ปลด Clipping Mask', keys: 'Mod+Alt+7', run: () => ops.releaseClippingMask(), enabled: hasSel },
+    {
+      id: 'object.imageTrace',
+      label: 'Image Trace — แปลงภาพเป็นเวกเตอร์…',
+      keys: 'Mod+Alt+T',
+      run: () => showTraceDialog(ed),
+      enabled: () => selectedRasters(ed).length > 0,
+    },
     { id: 'object.flipH', label: 'พลิกแนวนอน', run: () => ops.flip('h'), enabled: hasSel },
     { id: 'object.flipV', label: 'พลิกแนวตั้ง', run: () => ops.flip('v'), enabled: hasSel },
     { id: 'object.lock', label: 'ล็อก', keys: 'Mod+2', run: () => ops.lock(), enabled: hasSel },

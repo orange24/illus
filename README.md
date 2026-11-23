@@ -31,6 +31,12 @@ npm run build    # build เป็นไฟล์ static ใน dist/ (deploy �
 
 **Pathfinder** — Unite, Minus Front, Minus Back, Intersect, Exclude, Divide
 
+**Image Trace** — แปลงภาพ raster (PNG/JPG/WebP หรือภาพใน PDF/.ai) เป็น path เวกเตอร์ที่แก้ไขได้: เลือกภาพแล้วกดปุ่ม *Image Trace* ที่แถบด้านบน หรือเมนู Object › Image Trace (`Ctrl/⌘+Alt+T`)
+- ค่าสำเร็จรูป: โลโก้ขาวดำ, ภาพสเก็ตช์, ภาพเงา, 3 / 6 / 16 สี, โทนเทา, ภาพถ่ายละเอียดต่ำ / สูง (เลือกจาก dropdown บนแถบด้านบนเพื่อ trace ทันที)
+- ปรับได้: โหมด (ขาวดำ / โทนเทา / สี), Threshold, จำนวนสี (2–64), ความแม่นยำของเส้น, มุม, ตัดจุดรบกวน, ความละเอียดที่ใช้ trace, วิธีสร้างรูปทรง (ซ้อนกัน / ชนกันพอดี), Ignore White, เก็บภาพต้นฉบับไว้
+- พรีวิวสด (ผลลัพธ์ / เส้นขอบ / ต้นฉบับ, กดค้างเพื่อเทียบ) พร้อมจำนวน path และ anchor; ประมวลผลใน Web Worker จึงไม่ค้าง
+- ผลลัพธ์เป็นกลุ่ม "Image Trace" วางทับตำแหน่ง/ขนาด/การหมุนเดิมของภาพ Ungroup แล้วแก้ไขทีละชิ้นได้ และ Undo ได้
+
 **Panels** — Transform (X/Y/W/H/หมุน), Appearance (Fill, Stroke, ความหนา, ปลาย/มุมเส้น, เส้นประ, Opacity, Swatches), Character, Align, Pathfinder, Layers (เพิ่ม/ลบ, ซ่อน, ล็อก, เปลี่ยนชื่อ, ลากเรียงลำดับ, เลือกวัตถุจากรายการ)
 
 **อื่นๆ** — Undo/Redo 120 ขั้น, บันทึกอัตโนมัติในเบราว์เซอร์, ลากไฟล์มาวางบน canvas, copy/paste SVG กับโปรแกรมอื่น
@@ -63,7 +69,8 @@ src/
   input.ts          เมาส์ / คีย์บอร์ด / wheel / clipboard / drag & drop
   tools/            เครื่องมือแต่ละตัว
   io/               import (.ai, PDF, SVG, legacy AI) และ export (SVG, PNG, PDF, .ai)
-  ui/               menubar, toolbar, panels, dialogs, icons
+  ui/               menubar, toolbar, panels, dialogs, icons, traceDialog (Image Trace)
+  trace/            Image Trace: tracer.ts (quantize → ลบจุดรบกวน → trace ขอบ → fit Bézier), worker และการแปลงเป็น path
 public/fonts/       Sarabun (SIL Open Font License) สำหรับฝังใน PDF
 ```
 
